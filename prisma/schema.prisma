@@ -73,3 +73,42 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+
+
+// Workout model
+model Workout {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  date      DateTime  @default(now())
+  duration  Int       // Duration in minutes
+  exercises Exercise[]
+  user      User      @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// Exercise model
+model Exercise {
+  id          Int       @id @default(autoincrement())
+  name        String
+  type        String    // e.g., "Strength", "Cardio", etc.
+  workouts    Workout[] @relation("WorkoutExercises")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  workouts  Workout[]
+}
+
+// Log model
+model Log {
+  id          Int       @id @default(autoincrement())
+  workoutId   Int
+  exerciseId  Int
+  sets        Int       // Number of sets performed
+  reps        Int       // Number of reps per set
+  weight      Float     // Weight used in the exercise
+  notes       String?   // Any additional notes
+  workout     Workout    @relation(fields: [workoutId], references: [id])
+  exercise    Exercise   @relation(fields: [exerciseId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

@@ -27,3 +27,90 @@ You can check out the [create-t3-app GitHub repository](https://github.com/t3-os
 ## How do I deploy this?
 
 Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+
+## Database Schema
+
+```mermaid
+erDiagram
+    User ||--o{ Account : has
+    User ||--o{ Session : has
+    User ||--o{ Post : creates
+    User ||--o{ Workout : performs
+
+    Post {
+        Int id PK
+        String name
+        DateTime createdAt
+        DateTime updatedAt
+        String createdById FK
+    }
+
+    Account {
+        String id PK
+        String userId FK
+        String type
+        String provider
+        String providerAccountId
+        String refresh_token
+        String access_token
+        Int expires_at
+        String token_type
+        String scope
+        String id_token
+        String session_state
+    }
+
+    Session {
+        String id PK
+        String sessionToken
+        String userId FK
+        DateTime expires
+    }
+
+    User {
+        String id PK
+        String name
+        String email
+        DateTime emailVerified
+        String image
+    }
+
+    VerificationToken {
+        String identifier
+        String token
+        DateTime expires
+    }
+
+    Workout {
+        Int id PK
+        Int userId FK
+        DateTime date
+        Int duration
+        DateTime createdAt
+        DateTime updatedAt
+    }
+
+    Exercise {
+        Int id PK
+        String name
+        String type
+        DateTime createdAt
+        DateTime updatedAt
+    }
+
+    Log {
+        Int id PK
+        Int workoutId FK
+        Int exerciseId FK
+        Int sets
+        Int reps
+        Float weight
+        String notes
+        DateTime createdAt
+        DateTime updatedAt
+    }
+
+    Workout ||--o{ Exercise : contains
+    Workout ||--o{ Log : has
+    Exercise ||--o{ Log : has
+```
